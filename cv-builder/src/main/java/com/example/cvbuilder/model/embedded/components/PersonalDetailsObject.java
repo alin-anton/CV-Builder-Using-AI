@@ -1,11 +1,11 @@
-package model.embedded.components;
+package com.example.cvbuilder.model.embedded.components;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.embedded.personal.LanguageObject;
-import model.embedded.personal.LinkObject;
+import com.example.cvbuilder.model.embedded.personal.LanguageObject;
+import com.example.cvbuilder.model.embedded.personal.LinkObject;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package model.embedded.education;
+package com.example.cvbuilder.model.embedded.education;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

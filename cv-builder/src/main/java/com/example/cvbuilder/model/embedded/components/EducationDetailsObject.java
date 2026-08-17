@@ -1,12 +1,12 @@
-package model.embedded.components;
+package com.example.cvbuilder.model.embedded.components;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.embedded.education.CertificationObject;
-import model.embedded.education.EducationObject;
+import com.example.cvbuilder.model.embedded.education.CertificationObject;
+import com.example.cvbuilder.model.embedded.education.EducationObject;
 
 import java.util.List;
 

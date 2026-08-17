@@ -1,15 +1,14 @@
-package model;
+package com.example.cvbuilder.model;
 
 
+import com.example.cvbuilder.model.embedded.ExperienceObject;
+import com.example.cvbuilder.model.embedded.OptionalObject;
+import com.example.cvbuilder.model.embedded.ProjectObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.embedded.*;
-import model.embedded.components.PersonalDetailsObject;
-import model.embedded.education.CertificationObject;
-import model.embedded.education.EducationObject;
-import model.embedded.personal.LanguageObject;
-import model.embedded.personal.LinkObject;
+import com.example.cvbuilder.model.embedded.components.PersonalDetailsObject;
+import com.example.cvbuilder.model.embedded.education.EducationObject;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

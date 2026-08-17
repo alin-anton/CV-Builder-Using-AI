@@ -1,6 +1,6 @@
-package service;
+package com.example.cvbuilder.service;
 
-import model.CvModel;
+import com.example.cvbuilder.model.CvModel;
 
 import java.util.List;
 
@@ -13,4 +13,6 @@ public interface CvService {
     CvModel addCv(CvModel cv);
 
     CvModel updateCv(CvModel cvNou, String id);
+
+    void deleteCv(String id);
 }

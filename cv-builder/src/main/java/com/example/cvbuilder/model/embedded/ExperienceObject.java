@@ -1,4 +1,5 @@
-package model.embedded;
+package com.example.cvbuilder.model.embedded;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,18 +9,17 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Builder
-public class ProjectObject {
+public class ExperienceObject {
 
-    private String title;
+    private String experienceTitle;
+    private String location;
     private List<String> descriptions;
-
-    private List<String> skillsUsed;
-
-
+    private List<String> skillsAcquired;
     private LocalDate startDate;
     private LocalDate finishDate;
+
 }

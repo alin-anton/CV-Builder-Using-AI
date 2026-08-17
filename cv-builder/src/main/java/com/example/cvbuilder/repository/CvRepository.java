@@ -1,7 +1,7 @@
-package repository;
+package com.example.cvbuilder.repository;
 
 
-import model.CvModel;
+import com.example.cvbuilder.model.CvModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

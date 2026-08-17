@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.embedded.*;
+import model.embedded.components.PersonalDetailsObject;
 import model.embedded.education.CertificationObject;
 import model.embedded.education.EducationObject;
 import model.embedded.personal.LanguageObject;
@@ -24,13 +25,7 @@ public class CvModel {
     private String id;
 
     //Personal details, links and contact
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private String email;
-    private String city;
-    private List<LanguageObject> languages;
-    private List<LinkObject> links;
+    private PersonalDetailsObject personalDetails;
 
     //Desired job title
     private String jobName;
@@ -42,8 +37,7 @@ public class CvModel {
     private List<ProjectObject> projects;
 
     //Education
-    private List<EducationObject> educationalInstitutions;
-    private List<CertificationObject> certifications;
+    private EducationObject education;
 
     //Experience
     private List<ExperienceObject> experience;

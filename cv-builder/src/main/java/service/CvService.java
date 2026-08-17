@@ -12,4 +12,5 @@ public interface CvService {
 
     CvModel addCv(CvModel cv);
 
+    CvModel updateCv(CvModel cvNou, String id);
 }

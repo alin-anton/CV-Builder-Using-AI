@@ -29,5 +29,10 @@ public class CvServiceImpl implements CvService {
         return cvRepository.save(cv);
     }
 
-
+    @Override
+    public CvModel updateCv(CvModel cvNou, String id){
+        CvModel cvVechi = cvRepository.findById(id).get();
+        cvVechi = cvNou;
+        return cvRepository.save(cvVechi);
+    }
 }

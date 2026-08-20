@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class CvController {
         cvService.deleteCv(id);
         return ResponseEntity.noContent().build();
     }
-    
+
     @PostMapping("/generate-ai-pdf")
     public ResponseEntity<byte[]> generateAiPdf(@RequestBody CvModel cvModel) {
         // 1. (Opțional) Salvezi datele venite din frontend în MongoDB
@@ -69,5 +70,19 @@ public class CvController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(pdfBytes);
+    }
+
+    @PostMapping(value = "/upload-and-parse", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CvModel> uploadAndParsePdf(@RequestParam("file") MultipartFile file) {
+
+        String rawText = aiService.extractTextFromPdf(file);
+
+        CvModel parsedCv = aiService.parseTextToCvModel(rawText);
+
+        parsedCv.setId(null);
+
+        CvModel savedCv = cvService.addCv(parsedCv);
+
+        return ResponseEntity.ok(savedCv);
     }
 }

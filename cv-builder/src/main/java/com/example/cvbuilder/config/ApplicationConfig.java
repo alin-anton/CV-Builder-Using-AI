@@ -1,7 +1,5 @@
 package com.example.cvbuilder.config;
 
-package com.example.cvbuilder.config;
-
 import com.example.cvbuilder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,13 +28,15 @@ public class ApplicationConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        // Setăm BCrypt ca algoritm de criptare a parolelor
+        // 1. Pasăm userDetailsService direct în constructor (așa cum ne cere eroarea)
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
+
+        // 2. Setăm encoder-ul pentru parole folosind metoda dedicată
         authProvider.setPasswordEncoder(passwordEncoder());
+
         return authProvider;
     }
-
+    
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

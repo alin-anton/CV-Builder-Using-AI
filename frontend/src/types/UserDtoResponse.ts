@@ -2,5 +2,5 @@ export interface UserDtoResponse {
   id: string;
   username: string;
   email: string;
-  role: string;
+  role: 'USER' | 'ADMIN';
 }

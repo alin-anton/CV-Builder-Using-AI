@@ -2,10 +2,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api', // Adresa backend-ului tău Spring Boot
+    baseURL: 'http://localhost:8080/api', 
 });
 
-// Interceptor care adaugă automat token-ul la fiecare cerere
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('jwt_token');
     if (token) {

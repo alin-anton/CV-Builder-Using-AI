@@ -1,28 +1,35 @@
-// src/services/authService.ts
 import api from './api';
-import type { LoginCredentials, RegisterCredentials, AuthResponse } from '../types';
 
 export const authService = {
-    login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-        const response = await api.post<AuthResponse>('/auth/login', credentials);
-        if (response.data.token) {
-            localStorage.setItem('jwt_token', response.data.token);
-        }
-        return response.data;
-    },
-
-    register: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
-        const response = await api.post<AuthResponse>('/auth/register', credentials);
-        return response.data;
-    },
-
-    logout: () => {
-        localStorage.removeItem('jwt_token');
-        // Opțional: redirecționează userul spre /login
-        window.location.href = '/login';
-    },
-
-    isAuthenticated: (): boolean => {
-        return !!localStorage.getItem('jwt_token');
+  // Login - trimite username și password
+  login: async (username: string, password: string) => {
+    const response = await api.post('/auth/login', { username, password });
+    
+    // Presupunem că backend-ul returnează un obiect { token: "ey..." }
+    if (response.data && response.data.token) {
+      localStorage.setItem('jwt_token', response.data.token);
     }
+    return response.data;
+  },
+
+  // Register - trimite datele pentru creare cont
+  register: async (data: { username: string; email: string; password: string }) => {
+    const response = await api.post('/auth/register', data);
+    return response.data;
+  },
+
+  // Logout - șterge token-ul
+  logout: () => {
+    localStorage.removeItem('jwt_token');
+  },
+
+  // Verifică dacă user-ul este logat (are token)
+  isAuthenticated: (): boolean => {
+    return !!localStorage.getItem('jwt_token');
+  },
+
+  // Preia token-ul (dacă ai nevoie de el manual)
+  getToken: () => {
+    return localStorage.getItem('jwt_token');
+  }
 };

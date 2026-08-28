@@ -5,29 +5,58 @@ import { MobileToolbar } from '../components/cv/MobileToolbar';
 import { PastCvsSidebar } from '../components/cv/PastCvsSidebar';
 import { FormSidebar } from '../components/cv/FormSidebar';
 import { CvCanvas } from '../components/cv/CvCanvas';
+import { cvService } from '../services/cvService';
+import type { CvModel } from '../types';
 
 const CvBuilder = () => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSimulatePdfGeneration = () => {
-    setPdfUrl("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
+  // Structura completă inițializată (pentru a evita erori de 'undefined')
+  const [cvData, setCvData] = useState<CvModel>({
+    jobName: '',
+    summary: '',
+    personalDetails: {
+      firstName: '', lastName: '', phone: '', email: '', city: '',
+      languages: [], links: []
+    },
+    educationDetails: {
+      educationalInstutions: [],
+      certifications: []
+    },
+    experiences: [],
+    projects: [],
+    optionals: []
+  });
+
+  const handleGeneratePdf = async () => {
+    setIsLoading(true);
+    try {
+      const url = await cvService.getPreviewUrl(cvData);
+      setPdfUrl(url); 
+    } catch (error) {
+      console.error("Eroare Axios:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    // Părintele ocupă tot ecranul (h-screen)
     <div className="h-screen flex flex-col bg-white overflow-hidden">
-      
-      {/* Bara de navigație sus (nu se redimensionează) */}
       <Navbar />
-
-      {/* Zona de lucru (ocupă restul spațiului cu flex-1) */}
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
         <MobileToolbar />
         <PastCvsSidebar />
         <CvCanvas pdfUrl={pdfUrl} />
-        <FormSidebar onGenerate={handleSimulatePdfGeneration} />
+        
+        {/* Pasăm cvData și setCvData direct */}
+        <FormSidebar 
+          cvData={cvData} 
+          setCvData={setCvData} 
+          onGenerate={handleGeneratePdf}
+          isLoading={isLoading}
+        />
       </div>
-      
     </div>
   );
 };

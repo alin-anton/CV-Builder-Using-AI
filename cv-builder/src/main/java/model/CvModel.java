@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.embedded.*;
 import model.embedded.components.PersonalDetailsObject;
-import model.embedded.education.CertificationObject;
 import model.embedded.education.EducationObject;
-import model.embedded.personal.LanguageObject;
-import model.embedded.personal.LinkObject;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

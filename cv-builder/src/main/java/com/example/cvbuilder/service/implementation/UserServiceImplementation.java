@@ -52,4 +52,11 @@ public class UserServiceImplementation implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public UserDtoResponse getByUsername(String username){
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Nu exista user cu username: " + username));
+        return userMapper.toDto(user);
+    }
+
 }

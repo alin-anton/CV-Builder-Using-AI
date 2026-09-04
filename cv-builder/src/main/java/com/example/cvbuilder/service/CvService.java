@@ -15,4 +15,6 @@ public interface CvService {
     CvModel updateCv(CvModel cvNou, String id);
 
     void deleteCv(String id);
+
+    String generatePdf(CvModel cv);
 }

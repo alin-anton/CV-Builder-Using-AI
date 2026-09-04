@@ -89,7 +89,7 @@ export const FormSidebar = ({ cvData, setCvData, onGenerate, isLoading }: FormSi
   };
 
   return (
-    <div id="form-drawer" className="hs-overlay hs-overlay-open:translate-x-0 translate-x-full transition-transform duration-300 transform hidden fixed top-0 end-0 bottom-0 z-[60] w-80 lg:w-96 bg-white border-s border-slate-200 lg:block lg:translate-x-0 lg:static lg:z-0 lg:shrink-0 shadow-2xl lg:shadow-none">
+    <div id="form-drawer" className="hs-overlay hs-overlay-open:translate-x-0 translate-x-full transition-transform duration-300 transform hidden fixed top-0 end-0 bottom-0 z-[100] w-80 lg:w-96 bg-white border-s border-slate-200 lg:block lg:translate-x-0 lg:static lg:z-0 lg:shrink-0 shadow-2xl lg:shadow-none">
       <div className="flex flex-col h-full">
         
         <div className="p-4 border-b border-slate-200 bg-slate-50">

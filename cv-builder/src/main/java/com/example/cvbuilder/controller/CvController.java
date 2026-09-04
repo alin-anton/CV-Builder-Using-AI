@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/api/cv")
+@RestController
+@RequestMapping("/api/cv")
 @RequiredArgsConstructor
 public class CvController {
     private final CvService cvService;

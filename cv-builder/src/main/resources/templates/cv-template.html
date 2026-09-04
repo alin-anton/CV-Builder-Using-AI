@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>CV</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e293b; margin: 40px; font-size: 14px; line-height: 1.5; }
+        .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #3b82f6; padding-bottom: 15px; }
+        .name { font-size: 32px; font-weight: bold; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
+        .job-title { font-size: 20px; color: #3b82f6; font-weight: 500; margin-top: 5px; }
+        .contact-info { margin-top: 10px; font-size: 13px; color: #475569; }
+        .contact-info span { margin: 0 5px; }
+
+        .section { margin-bottom: 20px; }
+        .section-title { font-size: 18px; font-weight: bold; color: #0f172a; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; margin-bottom: 10px; text-transform: uppercase; }
+
+        .item-header { margin-bottom: 5px; }
+        .item-title { font-weight: bold; font-size: 15px; color: #1e293b; }
+        .item-subtitle { font-size: 14px; color: #3b82f6; font-style: italic; }
+        .item-dates { font-size: 13px; color: #64748b; float: right; }
+
+        .item-body { margin-bottom: 15px; }
+        ul { margin-top: 5px; margin-bottom: 10px; padding-left: 20px; }
+        li { margin-bottom: 4px; }
+
+        .skills-container { margin-bottom: 15px; }
+        .skill-tag { display: inline-block; background-color: #f1f5f9; padding: 3px 8px; border-radius: 4px; margin-right: 5px; margin-bottom: 5px; font-size: 12px; border: 1px solid #e2e8f0; }
+
+        .ai-summary { background-color: #f8fafc; padding: 15px; border-left: 4px solid #3b82f6; font-style: italic; margin-bottom: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<!-- Antet -->
+<div class="header">
+    <div class="name" th:text="${cv.personalDetails.firstName + ' ' + cv.personalDetails.lastName}">Nume Prenume</div>
+    <div class="job-title" th:text="${cv.jobName}">Job Title</div>
+    <div class="contact-info">
+        <span th:text="${cv.personalDetails.email}">email@example.com</span> |
+        <span th:text="${cv.personalDetails.phone}">0700 000 000</span> |
+        <span th:text="${cv.personalDetails.city}">Oraș</span>
+    </div>
+</div>
+
+<!-- Rezumat (Afișează rezumatul AI dacă există, altfel rezumatul standard) -->
+<div class="ai-summary" th:if="${aiSummary != null and !aiSummary.isEmpty()}" th:text="${aiSummary}"></div>
+<div class="section" th:if="${cv.summary != null and !cv.summary.isEmpty() and aiSummary == null}">
+    <div class="section-title">Profil Profesional</div>
+    <p th:text="${cv.summary}"></p>
+</div>
+
+<!-- Experiență Profesională -->
+<div class="section" th:if="${cv.experience != null and !cv.experience.isEmpty()}">
+    <div class="section-title">Experiență Profesională</div>
+
+    <div th:each="exp : ${cv.experience}">
+        <div class="item-header">
+            <span class="item-dates" th:text="${exp.startDate + ' - ' + exp.finishDate}">Data Inceput - Data Final</span>
+            <span class="item-title" th:text="${exp.experienceTitle}">Funcție</span>
+            <span th:if="${exp.location != null}"> | <span class="item-subtitle" th:text="${exp.location}">Locație/Companie</span></span>
+        </div>
+        <div class="item-body">
+            <ul>
+                <li th:each="desc : ${exp.descriptions}" th:text="${desc}">Descriere responsabilitate</li>
+            </ul>
+            <div th:if="${exp.skillsAquired != null and !exp.skillsAquired.isEmpty()}">
+                <span style="font-size: 13px; font-weight: bold; color: #475569;">Tehnologii: </span>
+                <span class="skill-tag" th:each="skill : ${exp.skillsAquired}" th:text="${skill}">Skill</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Proiecte -->
+<div class="section" th:if="${cv.projects != null and !cv.projects.isEmpty()}">
+    <div class="section-title">Proiecte</div>
+
+    <div th:each="proj : ${cv.projects}">
+        <div class="item-header">
+            <span class="item-dates" th:text="${proj.startDate + ' - ' + proj.finishDate}">Data Inceput - Data Final</span>
+            <span class="item-title" th:text="${proj.title}">Nume Proiect</span>
+        </div>
+        <div class="item-body">
+            <ul>
+                <li th:each="desc : ${proj.descriptions}" th:text="${desc}">Descriere proiect</li>
+            </ul>
+            <div th:if="${proj.skillsUsed != null and !proj.skillsUsed.isEmpty()}">
+                <span style="font-size: 13px; font-weight: bold; color: #475569;">Tehnologii utilizate: </span>
+                <span class="skill-tag" th:each="skill : ${proj.skillsUsed}" th:text="${skill}">Skill</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Educație -->
+<div class="section" th:if="${cv.education != null and cv.education.educationalInstutions != null and !cv.education.educationalInstutions.isEmpty()}">
+    <div class="section-title">Educație</div>
+
+    <div th:each="edu : ${cv.education.educationalInstutions}" style="margin-bottom: 10px;">
+        <div class="item-header">
+            <span class="item-dates" th:text="${edu.startYear + ' - ' + edu.finishYear}">An - An</span>
+            <span class="item-title" th:text="${edu.institutionName}">Instituție</span>
+        </div>
+        <div class="item-body">
+            <span th:text="${edu.educationLevel}">Nivel / Specializare</span>
+        </div>
+    </div>
+</div>
+
+<!-- Abilități (Hard & Soft) -->
+<div class="section" th:if="${(cv.hardSkills != null and !cv.hardSkills.isEmpty()) or (cv.softSkills != null and !cv.softSkills.isEmpty())}">
+    <div class="section-title">Abilități</div>
+
+    <div class="skills-container" th:if="${cv.hardSkills != null and !cv.hardSkills.isEmpty()}">
+        <strong style="display: block; margin-bottom: 5px; font-size: 14px;">Hard Skills:</strong>
+        <span class="skill-tag" th:each="hSkill : ${cv.hardSkills}" th:text="${hSkill}">Hard Skill</span>
+    </div>
+
+    <div class="skills-container" th:if="${cv.softSkills != null and !cv.softSkills.isEmpty()}">
+        <strong style="display: block; margin-bottom: 5px; font-size: 14px;">Soft Skills:</strong>
+        <span class="skill-tag" th:each="sSkill : ${cv.softSkills}" th:text="${sSkill}">Soft Skill</span>
+    </div>
+</div>
+
+<!-- Informații Opționale -->
+<div class="section" th:if="${cv.optionalInformation != null and !cv.optionalInformation.isEmpty()}">
+    <div class="section-title">Informații Suplimentare</div>
+
+    <div th:each="opt : ${cv.optionalInformation}" style="margin-bottom: 10px;">
+        <div class="item-header">
+            <span class="item-title" th:text="${opt.title}">Titlu Secțiune</span>
+        </div>
+        <div class="item-body">
+            <p th:text="${opt.description}" style="margin-top: 5px;"></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

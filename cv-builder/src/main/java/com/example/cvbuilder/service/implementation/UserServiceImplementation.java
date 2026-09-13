@@ -5,8 +5,8 @@ import com.example.cvbuilder.entity.UserEntity;
 import com.example.cvbuilder.mapper.UserMapper;
 import com.example.cvbuilder.repository.UserRepository;
 import com.example.cvbuilder.service.UserService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +15,7 @@ public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDtoResponse getById(Long id){
@@ -32,14 +33,14 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserDtoResponse createUser(String username, String email, String password, String role) {
-        UserEntity user = new UserEntity();
+        UserEntity user;
 
-        if (role == "USER" || role == "ADMIN") {
+        if ("USER".equalsIgnoreCase(role) || "ADMIN".equalsIgnoreCase(role)) {
             user = UserEntity.builder()
                     .username(username)
                     .email(email)
-                    .password(password)
-                    .role(UserEntity.Role.valueOf(role)).build();
+                    .password(passwordEncoder.encode(password))
+                    .role(UserEntity.Role.valueOf(role.toUpperCase())).build();
         }
         else throw new RuntimeException("Rol invalid!");
 

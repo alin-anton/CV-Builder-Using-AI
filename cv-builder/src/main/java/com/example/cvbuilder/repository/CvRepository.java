@@ -12,4 +12,7 @@ public interface CvRepository extends MongoRepository<CvModel, String> {
 
     List<CvModel> findByPersonalDetailsEmail(String email);
 
+    List<CvModel> findByUserId(String userId);
+
+    java.util.Optional<CvModel> findByIdAndUserId(String id, String userId);
 }

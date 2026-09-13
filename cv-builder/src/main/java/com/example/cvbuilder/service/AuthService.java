@@ -21,9 +21,23 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
+        if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+            throw new RuntimeException("Numele de utilizator este obligatoriu!");
+        }
+        if (userRepository.findByUsername(request.getUsername().trim()).isPresent()) {
+            throw new RuntimeException("Numele de utilizator este deja folosit!");
+        }
+        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()
+                && userRepository.findByEmail(request.getEmail().trim()).isPresent()) {
+            throw new RuntimeException("Adresa de email este deja folosită!");
+        }
+
         // Creăm entitatea de user
         UserEntity user = new UserEntity();
-        user.setUsername(request.getUsername());
+        user.setUsername(request.getUsername().trim());
+        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
+            user.setEmail(request.getEmail().trim());
+        }
         user.setPassword(passwordEncoder.encode(request.getPassword())); // Criptăm parola!
         user.setRole(UserEntity.Role.USER);
 
@@ -46,7 +60,7 @@ public class AuthService {
 
         // Dacă trece de autentificare, scoatem user-ul din BD
         UserEntity user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Utilizatorul nu a fost găsit!"));
 
         // Generăm noul token
         String jwtToken = jwtService.generateToken(user);

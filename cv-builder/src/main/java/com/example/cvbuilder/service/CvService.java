@@ -6,15 +6,19 @@ import java.util.List;
 
 public interface CvService {
 
-    CvModel getById(String id);
+    CvModel getById(String id, String userId);
+
+    List<CvModel> getAllByUserId(String userId);
 
     List<CvModel> getByEmail(String email);
 
-    CvModel addCv(CvModel cv);
+    CvModel addCv(CvModel cv, String userId);
 
-    CvModel updateCv(CvModel cvNou, String id);
+    CvModel updateCv(CvModel cvNou, String id, String userId);
 
-    void deleteCv(String id);
+    void deleteCv(String id, String userId);
+
+    CvModel enhanceCvWithAi(CvModel cv);
 
     String generatePdf(CvModel cv);
 }

@@ -22,7 +22,7 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String username;
 
     @Column
@@ -31,6 +31,7 @@ public class UserEntity implements UserDetails {
     @Column
     private String password;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 

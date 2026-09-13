@@ -1,0 +1,21 @@
+# Environment and sensitive files
+.env
+.env.local
+*.properties
+!**/application.properties
+!**/application-local.properties.example
+
+# Dependencies and build outputs
+node_modules/
+dist/
+target/
+build/
+*.jar
+
+# IDE and OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+

@@ -35,57 +35,70 @@
 <div class="header">
     <div class="name" th:text="${cv.personalDetails.firstName + ' ' + cv.personalDetails.lastName}">Nume Prenume</div>
     <div class="job-title" th:text="${cv.jobName}">Job Title</div>
+
+    <!-- Detalii de contact standard -->
     <div class="contact-info">
         <span th:text="${cv.personalDetails.email}">email@example.com</span> |
         <span th:text="${cv.personalDetails.phone}">0700 000 000</span> |
         <span th:text="${cv.personalDetails.city}">Oraș</span>
     </div>
+
+    <!-- Link-uri (afișate doar dacă există) -->
+    <div class="contact-info" th:if="${cv.personalDetails.links != null and !cv.personalDetails.links.isEmpty()}" style="margin-top: 5px;">
+        <span th:each="linkObj, iterStat : ${cv.personalDetails.links}">
+            <a th:href="${linkObj.link}" th:text="${linkObj.platform}" style="color: #3b82f6; text-decoration: none;" target="_blank">Platformă</a>
+            <!-- Adaugă separatorul "|" doar dacă nu este ultimul element din listă -->
+            <span th:if="${!iterStat.last}" style="color: #475569; margin: 0 5px;">|</span>
+        </span>
+    </div>
 </div>
 
-<!-- Rezumat (Afișează rezumatul AI dacă există, altfel rezumatul standard) -->
+<!-- Rezumat -->
 <div class="ai-summary" th:if="${aiSummary != null and !aiSummary.isEmpty()}" th:text="${aiSummary}"></div>
 <div class="section" th:if="${cv.summary != null and !cv.summary.isEmpty() and aiSummary == null}">
-    <div class="section-title">Profil Profesional</div>
+    <div class="section-title">Professional Profile</div>
     <p th:text="${cv.summary}"></p>
 </div>
 
-<!-- Experiență Profesională -->
+<!-- Professional Experience -->
 <div class="section" th:if="${cv.experience != null and !cv.experience.isEmpty()}">
-    <div class="section-title">Experiență Profesională</div>
+    <div class="section-title">Professional Experience</div>
 
     <div th:each="exp : ${cv.experience}">
         <div class="item-header">
-            <span class="item-dates" th:text="${exp.startDate + ' - ' + exp.finishDate}">Data Inceput - Data Final</span>
-            <span class="item-title" th:text="${exp.experienceTitle}">Funcție</span>
-            <span th:if="${exp.location != null}"> | <span class="item-subtitle" th:text="${exp.location}">Locație/Companie</span></span>
+            <span class="item-dates" th:if="${(exp.startDate != null and !exp.startDate.isEmpty()) or (exp.finishDate != null and !exp.finishDate.isEmpty())}" 
+                  th:text="${(exp.startDate != null ? exp.startDate : '') + ((exp.startDate != null and !exp.startDate.isEmpty() and exp.finishDate != null and !exp.finishDate.isEmpty()) ? ' - ' : '') + (exp.finishDate != null ? exp.finishDate : '')}">Start Date - End Date</span>
+            <span class="item-title" th:text="${exp.experienceTitle}">Role</span>
+            <span th:if="${exp.location != null and !exp.location.isEmpty()}"> | <span class="item-subtitle" th:text="${exp.location}">Location/Company</span></span>
         </div>
         <div class="item-body">
-            <ul>
-                <li th:each="desc : ${exp.descriptions}" th:text="${desc}">Descriere responsabilitate</li>
+            <ul th:if="${exp.descriptions != null and !exp.descriptions.isEmpty()}">
+                <li th:each="desc : ${exp.descriptions}" th:text="${desc}">Responsibility description</li>
             </ul>
             <div th:if="${exp.skillsAquired != null and !exp.skillsAquired.isEmpty()}">
-                <span style="font-size: 13px; font-weight: bold; color: #475569;">Tehnologii: </span>
+                <span style="font-size: 13px; font-weight: bold; color: #475569;">Technologies: </span>
                 <span class="skill-tag" th:each="skill : ${exp.skillsAquired}" th:text="${skill}">Skill</span>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Proiecte -->
+<!-- Projects -->
 <div class="section" th:if="${cv.projects != null and !cv.projects.isEmpty()}">
-    <div class="section-title">Proiecte</div>
+    <div class="section-title">Projects</div>
 
     <div th:each="proj : ${cv.projects}">
         <div class="item-header">
-            <span class="item-dates" th:text="${proj.startDate + ' - ' + proj.finishDate}">Data Inceput - Data Final</span>
-            <span class="item-title" th:text="${proj.title}">Nume Proiect</span>
+            <span class="item-dates" th:if="${(proj.startDate != null and !proj.startDate.isEmpty()) or (proj.finishDate != null and !proj.finishDate.isEmpty())}" 
+                  th:text="${(proj.startDate != null ? proj.startDate : '') + ((proj.startDate != null and !proj.startDate.isEmpty() and proj.finishDate != null and !proj.finishDate.isEmpty()) ? ' - ' : '') + (proj.finishDate != null ? proj.finishDate : '')}">Start Date - End Date</span>
+            <span class="item-title" th:text="${proj.title}">Project Name</span>
         </div>
         <div class="item-body">
-            <ul>
-                <li th:each="desc : ${proj.descriptions}" th:text="${desc}">Descriere proiect</li>
+            <ul th:if="${proj.descriptions != null and !proj.descriptions.isEmpty()}">
+                <li th:each="desc : ${proj.descriptions}" th:text="${desc}">Project description</li>
             </ul>
             <div th:if="${proj.skillsUsed != null and !proj.skillsUsed.isEmpty()}">
-                <span style="font-size: 13px; font-weight: bold; color: #475569;">Tehnologii utilizate: </span>
+                <span style="font-size: 13px; font-weight: bold; color: #475569;">Technologies used: </span>
                 <span class="skill-tag" th:each="skill : ${proj.skillsUsed}" th:text="${skill}">Skill</span>
             </div>
         </div>
@@ -93,23 +106,23 @@
 </div>
 
 <!-- Educație -->
-<div class="section" th:if="${cv.education != null and cv.education.educationalInstutions != null and !cv.education.educationalInstutions.isEmpty()}">
-    <div class="section-title">Educație</div>
-
-    <div th:each="edu : ${cv.education.educationalInstutions}" style="margin-bottom: 10px;">
+<div class="section" th:if="${cv.education != null and cv.education.educationalInstitutions != null and !cv.education.educationalInstitutions.isEmpty()}">
+    <div class="section-title">Education</div>
+    <div th:each="edu : ${cv.education.educationalInstitutions}" style="margin-bottom: 10px;">
         <div class="item-header">
-            <span class="item-dates" th:text="${edu.startYear + ' - ' + edu.finishYear}">An - An</span>
-            <span class="item-title" th:text="${edu.institutionName}">Instituție</span>
+            <span class="item-dates" th:if="${(edu.startYear != null and !edu.startYear.isEmpty()) or (edu.finishYear != null and !edu.finishYear.isEmpty())}" 
+                  th:text="${(edu.startYear != null ? edu.startYear : '') + ((edu.startYear != null and !edu.startYear.isEmpty() and edu.finishYear != null and !edu.finishYear.isEmpty()) ? ' - ' : '') + (edu.finishYear != null ? edu.finishYear : '')}">Year - Year</span>
+            <span class="item-title" th:text="${edu.institutionName}">Institution</span>
         </div>
         <div class="item-body">
-            <span th:text="${edu.educationLevel}">Nivel / Specializare</span>
+            <span th:text="${edu.educationLevel}">Level</span>
         </div>
     </div>
 </div>
 
-<!-- Abilități (Hard & Soft) -->
+<!-- Skills (Hard & Soft) -->
 <div class="section" th:if="${(cv.hardSkills != null and !cv.hardSkills.isEmpty()) or (cv.softSkills != null and !cv.softSkills.isEmpty())}">
-    <div class="section-title">Abilități</div>
+    <div class="section-title">Skills</div>
 
     <div class="skills-container" th:if="${cv.hardSkills != null and !cv.hardSkills.isEmpty()}">
         <strong style="display: block; margin-bottom: 5px; font-size: 14px;">Hard Skills:</strong>
@@ -119,20 +132,6 @@
     <div class="skills-container" th:if="${cv.softSkills != null and !cv.softSkills.isEmpty()}">
         <strong style="display: block; margin-bottom: 5px; font-size: 14px;">Soft Skills:</strong>
         <span class="skill-tag" th:each="sSkill : ${cv.softSkills}" th:text="${sSkill}">Soft Skill</span>
-    </div>
-</div>
-
-<!-- Informații Opționale -->
-<div class="section" th:if="${cv.optionalInformation != null and !cv.optionalInformation.isEmpty()}">
-    <div class="section-title">Informații Suplimentare</div>
-
-    <div th:each="opt : ${cv.optionalInformation}" style="margin-bottom: 10px;">
-        <div class="item-header">
-            <span class="item-title" th:text="${opt.title}">Titlu Secțiune</span>
-        </div>
-        <div class="item-body">
-            <p th:text="${opt.description}" style="margin-top: 5px;"></p>
-        </div>
     </div>
 </div>
 

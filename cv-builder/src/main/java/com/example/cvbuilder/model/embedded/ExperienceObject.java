@@ -1,12 +1,12 @@
 package com.example.cvbuilder.model.embedded;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,8 +18,20 @@ public class ExperienceObject {
     private String experienceTitle;
     private String location;
     private List<String> descriptions;
-    private List<String> skillsAcquired;
-    private LocalDate startDate;
-    private LocalDate finishDate;
+
+    @JsonProperty("skillsAquired")
+    private List<String> skillsAquired;
+
+    // Asigură compatibilitatea atât pentru skillsAquired cât și pentru skillsAcquired
+    public List<String> getSkillsAcquired() {
+        return skillsAquired;
+    }
+
+    public void setSkillsAcquired(List<String> skillsAcquired) {
+        this.skillsAquired = skillsAcquired;
+    }
+
+    private String startDate;
+    private String finishDate;
 
 }

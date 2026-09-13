@@ -63,6 +63,10 @@ export interface OptionalObject {
 
 // Obiectul central care va fi trimis către Controller
 export interface CvModel {
+    id?: string;
+    userId?: string;
+    softSkills: string[];
+    hardSkills: string[];
     jobName: string;
     summary?: string;
     personalDetails: PersonalDetailsObject;

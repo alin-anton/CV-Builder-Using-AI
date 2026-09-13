@@ -15,7 +15,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -32,11 +31,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Rute publice
-                        .anyRequest().authenticated() // Restul necesită JWT[cite: 2]
+                        .requestMatchers("/error").permitAll() // Permite afișarea erorilor fără 403
+                        .anyRequest().authenticated() // Restul necesită JWT
                 )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //[cite: 2]
-                .authenticationProvider(authenticationProvider) //[cite: 2]
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); //[cite: 2]
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -48,7 +48,8 @@ public class SecurityConfig {
 
         // Definim OriginPatterns pentru HTTP/HTTPS de la CloudFront și localhost
         configuration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:5173",
+                "http://localhost:*",
+                "http://127.0.0.1:*",
                 "https://*.cloudfront.net",
                 "http://*.cloudfront.net"
         ));

@@ -41,6 +41,32 @@ const CvBuilder = () => {
   const [cvList, setCvList] = useState<CvModel[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [cvData, setCvData] = useState<CvModel>(createInitialCv());
+  const [isPastCvsOpen, setIsPastCvsOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // Închide panourile pe tasta Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsPastCvsOpen(false);
+        setIsFormOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Previne derularea paginii când un panou mobil este deschis
+  useEffect(() => {
+    if (isPastCvsOpen || isFormOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isPastCvsOpen, isFormOpen]);
 
   const fetchCvHistory = useCallback(async () => {
     setIsLoadingHistory(true);
@@ -207,6 +233,21 @@ const CvBuilder = () => {
     }
   };
 
+  const handleTogglePastCvs = () => {
+    setIsPastCvsOpen(prev => !prev);
+    setIsFormOpen(false);
+  };
+
+  const handleToggleForm = () => {
+    setIsFormOpen(prev => !prev);
+    setIsPastCvsOpen(false);
+  };
+
+  const handleCloseSidebars = () => {
+    setIsPastCvsOpen(false);
+    setIsFormOpen(false);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden relative">
       <Navbar />
@@ -224,7 +265,12 @@ const CvBuilder = () => {
         </div>
       )}
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
-        <MobileToolbar />
+        <MobileToolbar 
+          onTogglePastCvs={handleTogglePastCvs}
+          onToggleForm={handleToggleForm}
+          isPastCvsOpen={isPastCvsOpen}
+          isFormOpen={isFormOpen}
+        />
         <PastCvsSidebar
           cvList={cvList}
           activeCvId={cvData.id}
@@ -232,6 +278,8 @@ const CvBuilder = () => {
           onNewCv={handleNewCv}
           onDeleteCv={handleDeleteCv}
           isLoadingHistory={isLoadingHistory}
+          isOpen={isPastCvsOpen}
+          onClose={handleCloseSidebars}
         />
         <CvCanvas 
           pdfUrl={pdfUrl} 
@@ -244,6 +292,8 @@ const CvBuilder = () => {
           isLoading={isLoading}
           onAiEnhance={handleAiEnhance}
           isAiLoading={isAiLoading}
+          isOpen={isFormOpen}
+          onClose={handleCloseSidebars}
         />
       </div>
     </div>

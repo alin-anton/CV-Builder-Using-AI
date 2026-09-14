@@ -8,6 +8,8 @@ interface FormSidebarProps {
   isLoading: boolean;
   onAiEnhance?: () => void;
   isAiLoading?: boolean;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 export const FormSidebar = ({
@@ -16,7 +18,9 @@ export const FormSidebar = ({
   onGenerate,
   isLoading,
   onAiEnhance,
-  isAiLoading = false
+  isAiLoading = false,
+  isOpen = false,
+  onClose
 }: FormSidebarProps) => {
 
   const addLink = () => {
@@ -121,10 +125,38 @@ export const FormSidebar = ({
   };
 
   return (
-    <div id="form-drawer" className="hs-overlay hs-overlay-open:translate-x-0 translate-x-full transition-transform duration-300 transform hidden fixed top-0 end-0 bottom-0 z-[100] w-80 lg:w-96 bg-white border-s border-slate-200 lg:block lg:translate-x-0 lg:static lg:z-0 lg:shrink-0 shadow-2xl lg:shadow-none">
-      <div className="flex flex-col h-full">
+    <>
+      {/* Backdrop pentru mobil */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 lg:hidden transition-opacity"
+          aria-hidden="true"
+        />
+      )}
 
-        <div className="p-3.5 border-b border-slate-200 bg-slate-50 space-y-2">
+      <div
+        id="form-drawer"
+        className={`fixed top-0 end-0 bottom-0 z-[60] w-80 sm:w-96 lg:w-96 bg-white border-s border-slate-200 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-0 lg:shrink-0 shadow-2xl lg:shadow-none flex flex-col ${
+          isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
+        }`}
+      >
+        <div className="flex flex-col h-full">
+
+          {/* Header mobil cu titlu și buton de închidere */}
+          <div className="flex justify-between items-center py-3.5 px-4 border-b border-slate-200 lg:hidden bg-slate-50 shrink-0">
+            <h3 className="font-semibold text-slate-800 text-sm">Editează CV</h3>
+            <button
+              type="button"
+              onClick={onClose}
+              className="size-8 inline-flex justify-center items-center rounded-full bg-white text-slate-500 hover:bg-slate-200 hover:text-slate-700 shadow-sm transition-colors"
+              aria-label="Închide formularul"
+            >
+              <svg className="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+
+          <div className="p-3.5 border-b border-slate-200 bg-slate-50 space-y-2">
           {onAiEnhance && (
             <button
               type="button"
@@ -437,5 +469,6 @@ export const FormSidebar = ({
         </div>
       </div>
     </div>
+    </>
   );
 };
